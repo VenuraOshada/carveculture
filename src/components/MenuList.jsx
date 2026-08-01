@@ -1,36 +1,50 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Reveal from './Reveal';
 
-const MENU_ITEMS = [
+const MENU_CATEGORIES = [
   {
-    name: 'Classic Fudge Brownie',
-    description: 'Rich, dense, and intensely chocolatey. Our OG recipe with a crackly top.',
-    note: 'Best seller',
+    id: 'brownies',
+    category: 'Brownies',
+    minOrderNote: '*Min Order Qty 6pcs',
+    items: [
+      { name: 'Classic Brownies', price: 'Rs.250' },
+      { name: 'Brownies with Nutella and Almond', price: 'Rs.370' },
+      { name: 'Brownies with Pistachio', price: 'Rs.380' },
+      { name: 'Brownie with Strawberry', price: 'Rs.370' },
+      { name: 'Brownie with Cashew on top', price: 'Rs.350' },
+      { name: 'Brownie with Biscoff', price: 'Rs.450' },
+      { name: 'Brownie with Oreo', price: 'Rs.350' },
+    ],
   },
   {
-    name: 'Walnut Brownie',
-    description: 'Classic fudge base loaded with roasted walnut pieces for a satisfying crunch.',
-    note: null,
+    id: 'cookies',
+    category: 'Cookies',
+    minOrderNote: '*Min Order Qty 6pcs',
+    items: [
+      { name: 'Classic Cookie', price: 'Rs.180' },
+      { name: 'Chocolate chip Cookie', price: 'Rs.200' },
+      { name: 'White chocochip Cookie', price: 'Rs.210' },
+      { name: 'Kinder Cookie', price: 'Rs.280' },
+      { name: 'Banana bread Cookie', price: 'Rs.230' },
+      { name: 'Pistachio Cookie', price: 'Rs.240' },
+    ],
   },
   {
-    name: 'Salted Caramel Brownie',
-    description: 'Swirled with house-made salted caramel and finished with flaky sea salt.',
-    note: 'New',
-  },
-  {
-    name: 'Chocolate Chip Cookies',
-    description: 'Crisp edges, chewy centers, and pools of melted dark chocolate in every bite.',
-    note: null,
-  },
-  {
-    name: 'Biscoff Brownie',
-    description: 'Fudgy brownie base with Lotus Biscoff spread ripple and crushed cookie topping.',
-    note: null,
-  },
-  {
-    name: 'Celebration Cake',
-    description: 'Custom chocolate layer cake with ganache frosting. Perfect for birthdays & events.',
-    note: 'Pre-order only',
+    id: 'other',
+    category: 'Other',
+    minOrderNote: null,
+    items: [
+      { name: 'Banana Bread Loaf', price: 'Rs.1450' },
+      {
+        name: 'Cookie pack (6pcs)',
+        subItems: [
+          { name: 'Classic', price: 'Rs.700' },
+          { name: 'Chocochip', price: 'Rs.780' },
+          { name: 'White Chocochip', price: 'Rs.800' },
+        ],
+      },
+    ],
   },
 ];
 
@@ -48,65 +62,163 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] },
   },
 };
 
 /**
- * MenuList — section displaying menu items as staggered rows.
+ * MenuList — displays menu items categorized into Brownies, Cookies, and Other with prices.
  */
 export default function MenuList() {
+  const [activeTab, setActiveTab] = useState('all');
+
+  const filteredCategories =
+    activeTab === 'all'
+      ? MENU_CATEGORIES
+      : MENU_CATEGORIES.filter((cat) => cat.id === activeTab);
+
   return (
     <section id="menu" aria-labelledby="menu-heading" className="py-16 md:py-24">
       <div className="section-container">
         <Reveal>
           <p className="text-xs tracking-[0.2em] uppercase text-muted mb-3">
-            What we bake
+            Freshly Baked
           </p>
-          <h2
-            id="menu-heading"
-            className="font-semibold tracking-tight mb-12 md:mb-16"
-            style={{ fontSize: 'var(--text-section)' }}
-          >
-            The Menu
-          </h2>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 md:mb-14">
+            <div>
+              <h2
+                id="menu-heading"
+                className="font-semibold tracking-tight"
+                style={{ fontSize: 'var(--text-section)' }}
+              >
+                Our Menu
+              </h2>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex flex-wrap gap-2 border-b border-ink/10 pb-2 md:pb-0 md:border-b-0">
+              <button
+                type="button"
+                onClick={() => setActiveTab('all')}
+                className={`px-4 py-1.5 text-xs tracking-wider uppercase transition-all rounded-full ${
+                  activeTab === 'all'
+                    ? 'bg-accent text-cream font-medium shadow-xs'
+                    : 'text-muted hover:text-ink border border-ink/10 hover:border-ink/30'
+                }`}
+              >
+                All Items
+              </button>
+              {MENU_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setActiveTab(cat.id)}
+                  className={`px-4 py-1.5 text-xs tracking-wider uppercase transition-all rounded-full ${
+                    activeTab === cat.id
+                      ? 'bg-accent text-cream font-medium shadow-xs'
+                      : 'text-muted hover:text-ink border border-ink/10 hover:border-ink/30'
+                  }`}
+                >
+                  {cat.category}
+                </button>
+              ))}
+            </div>
+          </div>
         </Reveal>
 
-        <motion.ul
-          role="list"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
-          className="space-y-0"
-        >
-          {MENU_ITEMS.map((item) => (
-            <motion.li
-              key={item.name}
-              variants={itemVariants}
-              className="py-5 md:py-6 border-b border-ink/10 first:border-t"
-            >
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-1 md:gap-8">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-base md:text-lg font-semibold">
-                    {item.name}
-                  </h3>
-                  {item.note && (
-                    <span className="inline-flex items-center px-2 py-0.5 text-[0.65rem] tracking-widest uppercase text-accent border border-accent/30 rounded-sm whitespace-nowrap">
-                      {item.note}
-                    </span>
-                  )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+            className={`grid grid-cols-1 ${
+              activeTab === 'all' ? 'lg:grid-cols-3' : 'lg:grid-cols-1 max-w-3xl mx-auto'
+            } gap-8 md:gap-10`}
+          >
+            {filteredCategories.map((cat) => (
+              <div
+                key={cat.id}
+                className="bg-cream-dark/60 border border-ink/10 rounded-xl p-6 md:p-8 flex flex-col justify-between shadow-xs transition-shadow duration-300 hover:shadow-md"
+              >
+                <div>
+                  <div className="flex items-baseline justify-between border-b border-ink/15 pb-4 mb-6">
+                    <h3 className="text-2xl font-semibold tracking-tight text-ink font-serif">
+                      {cat.category}
+                    </h3>
+                    {cat.minOrderNote && (
+                      <span className="text-[0.7rem] italic tracking-wide text-accent font-medium">
+                        {cat.minOrderNote}
+                      </span>
+                    )}
+                  </div>
+
+                  <motion.ul
+                    role="list"
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: '-20px' }}
+                    className="space-y-4"
+                  >
+                    {cat.items.map((item) => (
+                      <motion.li
+                        key={item.name}
+                        variants={itemVariants}
+                        className="flex flex-col gap-1 pb-3 border-b border-dashed border-ink/10 last:border-b-0 last:pb-0"
+                      >
+                        {item.subItems ? (
+                          <div>
+                            <span className="text-base font-medium text-ink block mb-2">
+                              {item.name}
+                            </span>
+                            <ul className="pl-4 space-y-2 border-l-2 border-accent/20">
+                              {item.subItems.map((sub) => (
+                                <li
+                                  key={sub.name}
+                                  className="flex items-center justify-between gap-3 text-sm"
+                                >
+                                  <span className="text-muted font-normal">
+                                    – {sub.name}
+                                  </span>
+                                  <span className="font-semibold text-accent text-sm whitespace-nowrap bg-accent/10 px-2.5 py-0.5 rounded-full">
+                                    {sub.price}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-between gap-4">
+                            <span className="text-base font-medium text-ink leading-snug">
+                              {item.name}
+                            </span>
+                            <span className="font-semibold text-accent text-sm whitespace-nowrap bg-accent/10 px-2.5 py-0.5 rounded-full shrink-0">
+                              {item.price}
+                            </span>
+                          </div>
+                        )}
+                      </motion.li>
+                    ))}
+                  </motion.ul>
                 </div>
-                <p className="text-sm text-muted md:max-w-sm md:text-right leading-relaxed">
-                  {item.description}
-                </p>
+
+                {cat.minOrderNote && (
+                  <div className="mt-8 pt-4 border-t border-ink/10 text-center">
+                    <p className="text-xs text-muted">
+                      Custom orders & bulk inquiries welcome.
+                    </p>
+                  </div>
+                )}
               </div>
-            </motion.li>
-          ))}
-        </motion.ul>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         <hr className="hairline mt-16 md:mt-24" />
       </div>
     </section>
   );
 }
+
