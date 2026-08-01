@@ -24,6 +24,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+[id] {
+  scroll-margin-top: 5rem;
+}
+
 body {
   font-family: var(--font-serif);
   background-color: var(--color-cream);

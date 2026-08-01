@@ -67,8 +67,22 @@ export default function Nav() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  const handleLinkClick = useCallback(() => {
+  const handleNavClick = useCallback((e, href) => {
+    e.preventDefault();
     setMenuOpen(false);
+    document.body.style.overflow = '';
+
+    setTimeout(() => {
+      if (href === '#' || href === '') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const targetId = href.replace('#', '');
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }, 60);
   }, []);
 
   return (
@@ -90,6 +104,7 @@ export default function Nav() {
           {/* Logo + Wordmark */}
           <a
             href="#"
+            onClick={(e) => handleNavClick(e, '#')}
             className="flex items-center gap-3 text-xl md:text-2xl font-semibold text-ink tracking-tight"
             aria-label="Crave Culture — home"
           >
@@ -111,6 +126,7 @@ export default function Nav() {
               <li key={link.href}>
                 <a
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="text-sm text-muted hover:text-ink transition-colors duration-200"
                 >
                   {link.label}
@@ -155,15 +171,15 @@ export default function Nav() {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="md:hidden overflow-hidden border-t border-ink/10"
+              className="md:hidden overflow-hidden border-t border-ink/10 bg-cream/98 backdrop-blur-md shadow-lg"
             >
-              <ul className="section-container py-6 flex flex-col gap-4" role="list">
+              <ul className="section-container py-6 flex flex-col gap-2" role="list">
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      className="block text-lg text-ink py-2"
-                      onClick={handleLinkClick}
+                      className="block text-lg font-medium text-ink py-2.5 px-3 rounded-lg hover:bg-cream-dark transition-colors duration-150"
+                      onClick={(e) => handleNavClick(e, link.href)}
                     >
                       {link.label}
                     </a>
