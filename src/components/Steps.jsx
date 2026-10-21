@@ -6,7 +6,7 @@ const STEPS = [
     number: '01',
     title: 'Message us',
     description:
-      'Send us a DM on Instagram or a WhatsApp message with what you\'d like to order and your preferred delivery date.',
+      'Send us a DM on Instagram with what you\'d like to order and your preferred delivery date.',
   },
   {
     number: '02',

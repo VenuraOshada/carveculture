@@ -35,6 +35,8 @@ const MENU_CATEGORIES = [
     category: 'Other',
     minOrderNote: null,
     items: [
+      { name: 'Eclair (4pcs)', price: 'Rs.880' },
+      { name: 'Cream Puffs (6pcs)', price: 'Rs.1200' },
       { name: 'Banana Bread Loaf', price: 'Rs.1450' },
       {
         name: 'Cookie pack (6pcs)',
