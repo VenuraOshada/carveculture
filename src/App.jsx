@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Carousel from './components/Carousel';
-import HeroPhoto from './components/HeroPhoto';
 import MenuList from './components/MenuList';
 import Footer from './components/Footer';
 
@@ -33,7 +32,6 @@ export default function App() {
           <Carousel />
         </div>
 
-        <HeroPhoto />
         <MenuList />
 
         {/* Lazy-loaded below-fold sections */}

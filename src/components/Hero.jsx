@@ -55,7 +55,7 @@ export default function Hero() {
             className="text-muted max-w-lg mb-8 leading-relaxed"
             style={{ fontSize: 'var(--text-body)' }}
           >
-            Small-batch brownies, cookies & cakes crafted with premium ingredients.
+            Small-batch brownies, cookies & eclairs crafted with premium ingredients.
             Every order is freshly baked — never sitting on a shelf.
           </p>
         </Reveal>
